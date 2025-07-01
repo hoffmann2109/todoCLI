@@ -1,13 +1,11 @@
-﻿using CLI_TODO.Logic.InputOutput;
-using DotNetEnv;
+﻿using CLI_TODO.Database;
+using CLI_TODO.Logic.InputOutput;
 
-Env.Load();
-
+var db = new DatabaseService();
 var outputService = new OutputService();
 var inputService = new InputService();
-var conn = Environment.GetEnvironmentVariable("MONGO_CONN")
-           ?? throw new InvalidOperationException("Set MONGO_CONN in .env");
 
+db.InitializeDatabase();
 outputService.PrintWelcomeMessage();
 
 // Main loop:
