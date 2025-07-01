@@ -9,9 +9,8 @@ public interface TodoItem
     bool IsCompleted { get; set; }
     
 
-    public void printInfo()
+    public void PrintInfo()
     {
         Console.WriteLine($"{Id}\t{TodoType}\t{Description}\t{DueDate:dd.MM.yyyy}\t{IsCompleted}");
     }
-    
 }

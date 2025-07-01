@@ -36,21 +36,32 @@ public class CommandHandler
         result.TodoItem = item;
         
         Console.WriteLine("Added item: ");
-        result.TodoItem.printInfo();
-        _databaseService.addItemToDatabase(result.TodoItem);
+        result.TodoItem.PrintInfo();
+        _databaseService.AddItemToList(result.TodoItem);
     }
     
     public void ProcessList()
     {
-
+        var list = _databaseService.Todos;
+        for (int i = 0; i < list.Count; i++)
+        {
+            list[i].PrintInfo();
+        }
     }
     
-    public void ProcessComplete(InputMessage result)
+    public void ProcessComplete(string[] tokens, InputMessage result)
     {
-        if (result.TodoItem != null)
+        var idToken = tokens[1];
+        
+        if (!Guid.TryParse(idToken, out var id))
         {
-            result.TodoItem.IsCompleted = true;
+            Console.WriteLine($"Invalid ID format: '{idToken}'");
+            return;
         }
+        
+        TodoItem item = _databaseService.GetItemById(id);
+        item.IsCompleted = true;
+        item.PrintInfo();
     }
     
     public void ProcessReopen()
@@ -70,6 +81,7 @@ public class CommandHandler
 
     public void ProcessEnd()
     {
+        _databaseService.AddItemsToDatabase();
         Environment.Exit(0);
     }
     
