@@ -5,7 +5,7 @@ public class OutputService
     public void PrintWelcomeMessage()
     {
         Console.WriteLine("Welcome back!");
-        Console.WriteLine("Enter a command, or type 'help' to see your options.");
+        
     }
 
     public void PrintAvailableCommands()

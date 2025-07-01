@@ -4,10 +4,12 @@ public class InputParser
 {
     public Commands ParseInput(string input)
     {
+        var command = Commands.Help;
+        
         if (string.IsNullOrWhiteSpace(input))
         {
             Console.Write("Invalid input");
-            return Commands.Help;
+            return command;
         }
         
         var trimmedStart = input.TrimStart();
@@ -20,13 +22,8 @@ public class InputParser
         
         var stringInput = trimmedStart.Substring(0, endOfWord);
         
-        // try parse, ignore case
-        if (Enum.TryParse<Commands>(stringInput, ignoreCase: true, out var cmd)
-            && Enum.IsDefined(typeof(Commands), cmd))
-        {
-            return cmd;
-        }
+        command = Enum.Parse<Commands>(stringInput, ignoreCase: true);
 
-        return Commands.Help;
+        return command;
     }
 }

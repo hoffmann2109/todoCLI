@@ -7,8 +7,7 @@ public class InputService
     
     public void GetUserInput()
     {
-        Console.Write("Enter your command ");
-        Console.Write("> ");
+        Console.Write("Enter a command or type 'help' > ");
         var input = Console.ReadLine() ?? string.Empty;
         var command = _inputParser.ParseInput(input);
         ProcessUserInput(command);
