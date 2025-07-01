@@ -6,4 +6,9 @@ public interface TodoItem
     string Description { get; set; }
     DateTime DueDate { get; set; }
     bool IsCompleted { get; set; }
+
+    public void printInfo()
+    {
+        Console.WriteLine($"{TodoType}\t{Description}\t{DueDate:dd.MM.yyyy}\t{IsCompleted}");
+    }
 }

@@ -1,6 +1,6 @@
 namespace CLI_TODO.Data;
 
-public class PersonalItem
+public class PersonalItem : TodoItem
 {
     public TodoType TodoType => TodoType.Personal;
     public string Description { get; set; }

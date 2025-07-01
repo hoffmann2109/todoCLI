@@ -1,29 +1,30 @@
+using System.Globalization;
+using CLI_TODO.Data;
+
 namespace CLI_TODO.Logic.InputOutput;
 
-public class InputParser
+public static class InputParser
 {
-    public Commands ParseInput(string input)
+    public static void ParseInput(string input)
     {
-        var command = Commands.Help;
+        var inputService = new InputService();
+        var result = new InputMessage();
         
         if (string.IsNullOrWhiteSpace(input))
         {
-            Console.Write("Invalid input");
-            return command;
+            throw new ArgumentException("Input cannot be empty", nameof(input));
         }
         
-        var trimmedStart = input.TrimStart();
-        
-        var endOfWord = 0;
-        while (endOfWord < trimmedStart.Length && !char.IsWhiteSpace(trimmedStart[endOfWord]))
-        {
-            endOfWord++;
-        }
-        
-        var stringInput = trimmedStart.Substring(0, endOfWord);
-        
-        command = Enum.Parse<Commands>(stringInput, ignoreCase: true);
+        var tokens = input
+            .Trim()
+            .Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
 
-        return command;
+        if (!Enum.TryParse<Commands>(tokens[0], ignoreCase: true, out var command))
+        {
+            throw new FormatException($"Unknown command '{tokens[0]}'");
+        }
+        result.Command = command;
+        
+        inputService.ProcessUserInput(command, tokens, result);
     }
 }

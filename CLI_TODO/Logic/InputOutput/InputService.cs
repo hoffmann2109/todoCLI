@@ -1,24 +1,24 @@
+using CLI_TODO.Data;
+
 namespace CLI_TODO.Logic.InputOutput;
 
 public class InputService
 {
-    private readonly InputParser _inputParser = new();
     private readonly CommandHandler _commandHandler = new();
     
     public void GetUserInput()
     {
         Console.Write("Enter a command or type 'help' > ");
         var input = Console.ReadLine() ?? string.Empty;
-        var command = _inputParser.ParseInput(input);
-        ProcessUserInput(command);
+        InputParser.ParseInput(input);
     }
 
-    private void ProcessUserInput(Commands command)
+    public void ProcessUserInput(Commands command, string[] tokens, InputMessage result)
     {
         switch (command)
         {
             case Commands.Help: _commandHandler.ProcessHelp(); break;
-            case Commands.Add: _commandHandler.ProcessAdd(); break;
+            case Commands.Add: _commandHandler.ProcessAdd(tokens, result); break;
             case Commands.List: _commandHandler.ProcessList(); break;
             case Commands.Complete: _commandHandler.ProcessComplete(); break;
             case Commands.Reopen: _commandHandler.ProcessReopen(); break;
