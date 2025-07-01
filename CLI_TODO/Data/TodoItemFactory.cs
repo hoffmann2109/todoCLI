@@ -16,6 +16,7 @@ public static class TodoItemFactory
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
         
+        item.Id = Guid.NewGuid(); 
         item.Description = description;
         item.DueDate     = dueDate;
         item.IsCompleted = false;

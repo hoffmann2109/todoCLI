@@ -7,19 +7,10 @@ namespace CLI_TODO.Logic.InputOutput;
 public class CommandHandler
 {
     private readonly DatabaseService _databaseService =  new();
+    private readonly OutputService _outputService = new ();
     public void ProcessHelp()
     {
-        Console.WriteLine("----------------------------------------");
-        Console.WriteLine("Available commands:");
-        Console.WriteLine("Help ... See available commands");
-        Console.WriteLine("Add ... Add an item");
-        Console.WriteLine("List ... List all todo items");
-        Console.WriteLine("Complete ... Mark todo item as complete");
-        Console.WriteLine("Reopen ... Reopen todo item");
-        Console.WriteLine("Update ... Update a todo item");
-        Console.WriteLine("Delete ... Delete a todo item");
-        Console.WriteLine("End ... End app");
-        Console.WriteLine("----------------------------------------");
+        _outputService.PrintCommands();
     }
     
     public void ProcessAdd(string[] tokens, InputMessage result)
@@ -54,9 +45,12 @@ public class CommandHandler
 
     }
     
-    public void ProcessComplete()
+    public void ProcessComplete(InputMessage result)
     {
-
+        if (result.TodoItem != null)
+        {
+            result.TodoItem.IsCompleted = true;
+        }
     }
     
     public void ProcessReopen()
