@@ -2,43 +2,43 @@ namespace CLI_TODO.Logic.InputOutput;
 
 public class OutputService
 {
-    public void printWelcomeMessage()
+    public void PrintWelcomeMessage()
     {
         Console.WriteLine("Welcome back!");
         Console.WriteLine("Enter a command, or type 'help' to see your options.");
     }
 
-    public void printAvailableCommands()
+    public void PrintAvailableCommands()
     {
         
     }
 
-    public void printCommands()
+    public void PrintCommands()
     {
         
     }
 
-    public void printAllItems()
+    public void PrintAllItems()
     {
         
     }
 
-    public void printFilteredResults()
+    public void PrintFilteredResults()
     {
         
     }
 
-    public void printOperationSuccessMessage()
+    public void PrintOperationSuccessMessage()
     {
         
     }
 
-    public void printOperationFailMessage()
+    public void PrintOperationFailMessage()
     {
         
     }
 
-    public void printEmptyListMessage()
+    public void PrintEmptyListMessage()
     {
         
     }

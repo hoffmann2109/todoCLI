@@ -8,5 +8,6 @@ public enum Commands
     Complete, // Complete an item
     Reopen, // Reopen a completed item
     Update, // Edit an item
-    Delete // Delete an item
+    Delete, // Delete an item
+    End // Shut down App
 }

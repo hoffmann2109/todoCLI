@@ -28,7 +28,5 @@ public class InputParser
         }
 
         return Commands.Help;
-
-
     }
 }

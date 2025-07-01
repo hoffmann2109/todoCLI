@@ -3,5 +3,11 @@
 var outputService = new OutputService();
 var inputService = new InputService();
 
-outputService.printWelcomeMessage();
-inputService.getUserInput();
+outputService.PrintWelcomeMessage();
+
+// Main loop:
+while (true)
+{
+    inputService.GetUserInput();
+}
+
