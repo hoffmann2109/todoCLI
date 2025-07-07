@@ -9,9 +9,6 @@ namespace CLI_TODO.Database;
 public class DatabaseService
 {
     private static readonly List<TodoItem> _todos = new();
-    private IMongoClient _client;
-    private IMongoDatabase _database;
-    private IMongoCollection<TodoItem> _todoCollection;
 
     public void InitializeDatabase()
     {
@@ -20,17 +17,29 @@ public class DatabaseService
         
         var conn = Environment.GetEnvironmentVariable("MONGO_CONN")
                    ?? throw new InvalidOperationException("Set MONGO_CONN in .env");
+
+        if (conn == null)
+        {
+            Console.WriteLine("You need to set MONGO_CONN in .env");
+            Environment.Exit(0);
+        }
+        
         try
         {
-            _client = new MongoClient(conn);
-            _database = _client.GetDatabase("TodoDb");
-            _todoCollection = _database.GetCollection<TodoItem>("todos");
+            var client = new MongoClient(conn);
+            var database = client.GetDatabase("TodoDb");
+            var todos = database.GetCollection<BsonDocument>("todos");
 
             // Ping the server to verify connectivity
             var ping = new BsonDocument("ping", 1);
-            _database.RunCommand<BsonDocument>(ping);
+            database.RunCommand<BsonDocument>(ping);
 
             Console.WriteLine("✅ Successfully connected to MongoDB.");
+            
+            // Sample: First element:
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", new ObjectId("686b430f10bda8480f858906"));
+            var document    = todos.Find(filter).FirstOrDefault();
+            Console.WriteLine(document);
         }
         catch (Exception ex)
         {
