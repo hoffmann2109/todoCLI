@@ -86,12 +86,11 @@ public class DatabaseService
 
         Console.WriteLine("Inserted TODO into MongoDB");
     }
-    
-    public ITodoItem GetItemById()
+
+    public void UpdateItem(FilterDefinition<BsonDocument> filter, UpdateDefinition<BsonDocument> update)
     {
-        
-        // TODO: Is it in the database?
-        return null;
+        _todosCollection.UpdateOne(filter, update);
     }
+    
     public List<ITodoItem> Todos => _todos;
 }

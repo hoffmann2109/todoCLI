@@ -1,6 +1,8 @@
 using System.Globalization;
 using CLI_TODO.Data;
 using CLI_TODO.Database;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace CLI_TODO.Logic.InputOutput;
 
@@ -29,8 +31,7 @@ public class CommandHandler(DatabaseService databaseService)
             throw new FormatException($"Date '{rawDate}' is not in the expected format dd.MM.yyyy");
         }
         
-        var descTokens = tokens.Skip(2).Take(tokens.Length - 3);
-        var description = string.Join(" ", descTokens);
+        var description = GetDescription(tokens);
         
         var item = TodoItemFactory.Create(type, description, dueDate);
         result.TodoItem = item;
@@ -42,16 +43,37 @@ public class CommandHandler(DatabaseService databaseService)
     
     public void ProcessList()
     {
-        var list = databaseService.Todos;
-        for (int i = 0; i < list.Count; i++)
-        {
-            list[i].PrintInfo();
-        }
+        // Filter out completed items for now
+        var sortedUncompleted = databaseService.Todos
+            .Where(item => !item.IsCompleted)
+            .OrderBy(item => item.DueDate);
+        
+        foreach (var todo in sortedUncompleted)
+            todo.PrintInfo();
     }
     
     public void ProcessComplete(string[] tokens, InputMessage result)
     {
+        var description = string.Join(" ", tokens.Skip(1));
+        var filter = Builders<BsonDocument>.Filter.Eq("Description", description);
 
+        var update = Builders<BsonDocument>.Update.Set("IsCompleted", true);
+
+        databaseService.UpdateItem(filter, update);
+        
+        var todo = databaseService.Todos.FirstOrDefault(t => t.Description == description);
+        if (todo != null)
+        {
+            todo.IsCompleted = true;
+        }
+            
+    }
+
+    private string GetDescription(string[] tokens)
+    {
+        var descTokens = tokens.Skip(2).Take(tokens.Length - 3);
+        var description = string.Join(" ", descTokens);
+        return description;
     }
     
     public void ProcessReopen()

@@ -10,6 +10,6 @@ public interface ITodoItem
 
     public void PrintInfo()
     {
-        Console.WriteLine($"{TodoType}\t{Description}\t{DueDate:dd.MM.yyyy}\t{IsCompleted}");
+        Console.WriteLine($"{TodoType}\t{Description}\t{DueDate:dd.MM.yyyy}");
     }
 }
