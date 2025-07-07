@@ -87,9 +87,38 @@ public class DatabaseService
         Console.WriteLine("Inserted TODO into MongoDB");
     }
 
-    public void UpdateItem(FilterDefinition<BsonDocument> filter, UpdateDefinition<BsonDocument> update)
+    public void UpdateItem(string description, bool isComplete)
     {
+        var filter = Builders<BsonDocument>.Filter.Eq("Description", description);
+        var update = Builders<BsonDocument>.Update.Set("IsCompleted", isComplete);
         _todosCollection.UpdateOne(filter, update);
+        var todo = Todos.FirstOrDefault(t => t.Description == description);
+        if (todo != null)
+        {
+            todo.IsCompleted = isComplete;
+        }
+    }
+
+    public void DeleteItem(string description)
+    {
+        var filter = Builders<BsonDocument>.Filter.Eq("Description", description);
+        try
+        {
+            var deleteResult = _todosCollection.DeleteOne(filter);
+
+            if (deleteResult.DeletedCount > 0)
+            {
+                _todos.RemoveAll(t => t.Description == description);
+            }
+            else
+            {
+                Console.WriteLine($"⚠️  No todo found with description “{description}”.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error deleting todo: {ex.Message}");
+        }
     }
     
     public List<ITodoItem> Todos => _todos;

@@ -56,18 +56,7 @@ public class CommandHandler(DatabaseService databaseService)
     public void ProcessStatusChange(string[] tokens, bool isComplete)
     {
         var description = string.Join(" ", tokens.Skip(1));
-        var filter = Builders<BsonDocument>.Filter.Eq("Description", description);
-
-        var update = Builders<BsonDocument>.Update.Set("IsCompleted", isComplete);
-
-        databaseService.UpdateItem(filter, update);
-        
-        var todo = databaseService.Todos.FirstOrDefault(t => t.Description == description);
-        if (todo != null)
-        {
-            todo.IsCompleted = isComplete;
-        }
-            
+        databaseService.UpdateItem(description, isComplete);
     }
 
     private string GetDescription(string[] tokens)
@@ -77,9 +66,10 @@ public class CommandHandler(DatabaseService databaseService)
         return description;
     }
     
-    public void ProcessDelete()
+    public void ProcessDelete(string[] tokens)
     {
-
+        var description = string.Join(" ", tokens.Skip(1));
+        databaseService.DeleteItem(description);
     }
 
     public void ProcessEnd()

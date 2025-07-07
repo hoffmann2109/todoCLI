@@ -39,7 +39,7 @@ public class InputService
             case Commands.List: _commandHandler.ProcessList(); break;
             case Commands.Complete: _commandHandler.ProcessStatusChange(tokens, true); break;
             case Commands.Reopen: _commandHandler.ProcessStatusChange(tokens, false); break;
-            case Commands.Delete: _commandHandler.ProcessDelete(); break;
+            case Commands.Delete: _commandHandler.ProcessDelete(tokens); break;
             case Commands.End: _commandHandler.ProcessEnd(); break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(command), command, null);
