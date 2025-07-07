@@ -13,7 +13,11 @@ public class DatabaseService
 
     public void InitializeDatabase()
     {
-        const string envPath = "/home/thomas/RiderProjects/CLI_TODO/CLI_TODO/.env";
+        // PC:
+        // const string envPath = "/home/thomas/RiderProjects/CLI_TODO/CLI_TODO/.env";
+        
+        // Laptop:
+        const string envPath = "/home/thomas/todoCLI/CLI_TODO/.env";
         Env.Load(envPath);
         
         var conn = Environment.GetEnvironmentVariable("MONGO_CONN")
@@ -37,18 +41,47 @@ public class DatabaseService
 
             Console.WriteLine("✅ Successfully connected to MongoDB.");
             
-            // Sample: First element:
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", new ObjectId("686b4b216a1e49005be5e964"));
-            var document    = _todosCollection.Find(filter).FirstOrDefault();
-            Console.WriteLine(document);
+            // Serialize all objects into the list:
+            RestoreDatabase();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"❌ Failed to connect to MongoDB: {ex.Message}");
         }
     }
-    
 
+    private void RestoreDatabase()
+    {
+        var emptyFilter = Builders<BsonDocument>.Filter.Empty;
+        var allDocs     = _todosCollection.Find(emptyFilter).ToList();
+
+        foreach (var doc in allDocs)
+        {
+            var desc        = doc.GetValue("Description", "").AsString;
+            var isCompleted = doc.GetValue("IsCompleted", false).AsBoolean;
+            var typeString  = doc.GetValue("TodoType",    "").AsString;
+
+            // Safe DateTime extraction:
+            DateTime dueDate;
+            var dueVal = doc.GetValue("DueDate", BsonNull.Value);
+            if (dueVal is BsonDateTime bsonDt)
+                dueDate = bsonDt.ToUniversalTime();
+            else
+                dueDate = DateTime.MinValue;   // or whatever default you prefer
+
+            // Parse enum
+            if (!Enum.TryParse<TodoType>(typeString, out var todoType))
+                todoType = TodoType.Personal;
+
+            // Factory + restore
+            var item = TodoItemFactory.Create(todoType, desc, dueDate);
+            item.IsCompleted = isCompleted;
+
+            _todos.Add(item);
+            Console.WriteLine($"🔄 Restored ({todoType}): {item.Description} – Due {item.DueDate}");
+        }
+    }
+    
     public void AddItems(TodoItem todoItem)
     {
         _todos.Add(todoItem);
