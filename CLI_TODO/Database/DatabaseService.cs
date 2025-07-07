@@ -28,13 +28,13 @@ public class DatabaseService
             database.RunCommand<BsonDocument>(ping);
 
             Console.WriteLine("✅ Successfully connected to MongoDB.");
-            
-            RestoreDatabase();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"❌ Failed to connect to MongoDB: {ex.Message}");
         }
+        
+        RestoreDatabase();
     }
 
     private void RestoreDatabase()
@@ -51,18 +51,23 @@ public class DatabaseService
             DateTime dueDate;
             var dueVal = doc.GetValue("DueDate", BsonNull.Value);
             if (dueVal is BsonDateTime bsonDt)
+            {
                 dueDate = bsonDt.ToUniversalTime();
+            }
             else
-                dueDate = DateTime.MinValue;   // or whatever default you prefer
-            
+            {
+                dueDate = DateTime.MinValue;
+            }
+
             if (!Enum.TryParse<TodoType>(typeString, out var todoType))
+            {
                 todoType = TodoType.Personal;
+            }
             
             var item = TodoItemFactory.Create(todoType, desc, dueDate);
             item.IsCompleted = isCompleted;
 
             _todos.Add(item);
-            Console.WriteLine($"🔄 Restored ({todoType}): {item.Description} – Due {item.DueDate}");
         }
     }
     
@@ -79,8 +84,7 @@ public class DatabaseService
         };
         _todosCollection.InsertOne(doc);
 
-        Console.WriteLine("➡ Inserted TODO into MongoDB:");
-        Console.WriteLine(doc);
+        Console.WriteLine("Inserted TODO into MongoDB");
     }
     
     public ITodoItem GetItemById()
@@ -89,8 +93,5 @@ public class DatabaseService
         // TODO: Is it in the database?
         return null;
     }
-    public List<ITodoItem> Todos
-    {
-        get { return _todos; }
-    }
+    public List<ITodoItem> Todos => _todos;
 }

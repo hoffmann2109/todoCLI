@@ -21,29 +21,4 @@ public class OutputService
         Console.WriteLine("End ... End app");
         Console.WriteLine("----------------------------------------");
     }
-
-    public void PrintAllItems()
-    {
-        
-    }
-
-    public void PrintFilteredResults()
-    {
-        
-    }
-
-    public void PrintOperationSuccessMessage()
-    {
-        
-    }
-
-    public void PrintOperationFailMessage()
-    {
-        
-    }
-
-    public void PrintEmptyListMessage()
-    {
-        
-    }
 }

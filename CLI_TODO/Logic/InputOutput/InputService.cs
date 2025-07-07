@@ -1,5 +1,6 @@
 using CLI_TODO.Data;
 using CLI_TODO.Database;
+using Sprache;
 
 namespace CLI_TODO.Logic.InputOutput;
 
@@ -18,7 +19,15 @@ public class InputService
     {
         Console.Write("Enter a command or type 'help' > ");
         var input = Console.ReadLine() ?? string.Empty;
-        InputParser.ParseInput(input, this);
+        try
+        {
+            InputParser.ParseInput(input, this);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Please enter a valid command or type 'help'");
+        }
+  
     }
 
     public void ProcessUserInput(Commands command, string[] tokens, InputMessage result)
