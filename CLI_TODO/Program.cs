@@ -1,11 +1,12 @@
 ﻿using CLI_TODO.Database;
 using CLI_TODO.Logic.InputOutput;
 
-var db = new DatabaseService();
-var outputService = new OutputService();
-var inputService = new InputService();
+var dbService = new DatabaseService();
+dbService.InitializeDatabase();
 
-db.InitializeDatabase();
+var outputService = new OutputService();
+var inputService = new InputService(dbService);
+
 outputService.PrintWelcomeMessage();
 
 // Main loop:

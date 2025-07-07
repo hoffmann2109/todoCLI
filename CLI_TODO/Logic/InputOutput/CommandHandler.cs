@@ -6,8 +6,14 @@ namespace CLI_TODO.Logic.InputOutput;
 
 public class CommandHandler
 {
-    private readonly DatabaseService _databaseService =  new();
+    private readonly DatabaseService _databaseService;
     private readonly OutputService _outputService = new ();
+    
+    public CommandHandler(DatabaseService databaseService)
+    {
+        _databaseService = databaseService;
+    }
+    
     public void ProcessHelp()
     {
         _outputService.PrintCommands();
@@ -37,7 +43,7 @@ public class CommandHandler
         
         Console.WriteLine("Added item: ");
         result.TodoItem.PrintInfo();
-        _databaseService.AddItemToList(result.TodoItem);
+        _databaseService.AddItems(result.TodoItem);
     }
     
     public void ProcessList()
@@ -51,17 +57,7 @@ public class CommandHandler
     
     public void ProcessComplete(string[] tokens, InputMessage result)
     {
-        var idToken = tokens[1];
-        
-        if (!Guid.TryParse(idToken, out var id))
-        {
-            Console.WriteLine($"Invalid ID format: '{idToken}'");
-            return;
-        }
-        
-        TodoItem item = _databaseService.GetItemById(id);
-        item.IsCompleted = true;
-        item.PrintInfo();
+
     }
     
     public void ProcessReopen()
@@ -81,7 +77,6 @@ public class CommandHandler
 
     public void ProcessEnd()
     {
-        _databaseService.AddItemsToDatabase();
         Environment.Exit(0);
     }
     

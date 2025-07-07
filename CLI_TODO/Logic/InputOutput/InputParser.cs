@@ -5,9 +5,8 @@ namespace CLI_TODO.Logic.InputOutput;
 
 public static class InputParser
 {
-    public static void ParseInput(string input)
+    public static void ParseInput(string input, InputService inputService)
     {
-        var inputService = new InputService();
         var result = new InputMessage();
         
         if (string.IsNullOrWhiteSpace(input))

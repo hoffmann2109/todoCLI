@@ -9,6 +9,7 @@ namespace CLI_TODO.Database;
 public class DatabaseService
 {
     private static readonly List<TodoItem> _todos = new();
+    private IMongoCollection<BsonDocument> _todosCollection;
 
     public void InitializeDatabase()
     {
@@ -28,7 +29,7 @@ public class DatabaseService
         {
             var client = new MongoClient(conn);
             var database = client.GetDatabase("TodoDb");
-            var todos = database.GetCollection<BsonDocument>("todos");
+            _todosCollection = database.GetCollection<BsonDocument>("todos");
 
             // Ping the server to verify connectivity
             var ping = new BsonDocument("ping", 1);
@@ -37,8 +38,8 @@ public class DatabaseService
             Console.WriteLine("✅ Successfully connected to MongoDB.");
             
             // Sample: First element:
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", new ObjectId("686b430f10bda8480f858906"));
-            var document    = todos.Find(filter).FirstOrDefault();
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", new ObjectId("686b4b216a1e49005be5e964"));
+            var document    = _todosCollection.Find(filter).FirstOrDefault();
             Console.WriteLine(document);
         }
         catch (Exception ex)
@@ -47,29 +48,26 @@ public class DatabaseService
         }
     }
     
-    public void AddItemToList(TodoItem todoItem)
+
+    public void AddItems(TodoItem todoItem)
     {
         _todos.Add(todoItem);
+        
+        var doc = new BsonDocument
+        {
+            { "Description", todoItem.Description },
+            { "DueDate",     todoItem.DueDate },
+            { "IsCompleted", todoItem.IsCompleted },
+            { "TodoType",    todoItem.TodoType.ToString() }
+        };
+        _todosCollection.InsertOne(doc);
+
+        Console.WriteLine("➡ Inserted TODO into MongoDB:");
+        Console.WriteLine(doc);
     }
     
-    public void AddItemsToDatabase()
+    public TodoItem GetItemById()
     {
-        foreach (TodoItem t in _todos)
-        {
-            // TODO: Implement method
-        }
-    }
-    
-    public TodoItem GetItemById(Guid id)
-    {
-        // Is it in the list?
-        foreach (TodoItem t in _todos)
-        {
-            if (t.Id == id)
-            {
-                return t;
-            }
-        }
         
         // TODO: Is it in the database?
         return null;

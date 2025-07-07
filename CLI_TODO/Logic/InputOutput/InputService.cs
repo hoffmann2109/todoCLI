@@ -1,16 +1,24 @@
 using CLI_TODO.Data;
+using CLI_TODO.Database;
 
 namespace CLI_TODO.Logic.InputOutput;
 
 public class InputService
 {
-    private readonly CommandHandler _commandHandler = new();
+    private readonly DatabaseService _databaseService;
+    private readonly CommandHandler _commandHandler;
+
+    public InputService(DatabaseService databaseService)
+    {
+        _databaseService = databaseService;
+        _commandHandler = new CommandHandler(_databaseService);
+    }
     
     public void GetUserInput()
     {
         Console.Write("Enter a command or type 'help' > ");
         var input = Console.ReadLine() ?? string.Empty;
-        InputParser.ParseInput(input);
+        InputParser.ParseInput(input, this);
     }
 
     public void ProcessUserInput(Commands command, string[] tokens, InputMessage result)
