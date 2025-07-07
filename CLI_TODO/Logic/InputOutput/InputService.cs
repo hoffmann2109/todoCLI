@@ -37,9 +37,8 @@ public class InputService
             case Commands.Help: _commandHandler.ProcessHelp(); break;
             case Commands.Add: _commandHandler.ProcessAdd(tokens, result); break;
             case Commands.List: _commandHandler.ProcessList(); break;
-            case Commands.Complete: _commandHandler.ProcessComplete(tokens, result); break;
-            case Commands.Reopen: _commandHandler.ProcessReopen(); break;
-            case Commands.Update: _commandHandler.ProcessUpdate(); break;
+            case Commands.Complete: _commandHandler.ProcessStatusChange(tokens, true); break;
+            case Commands.Reopen: _commandHandler.ProcessStatusChange(tokens, false); break;
             case Commands.Delete: _commandHandler.ProcessDelete(); break;
             case Commands.End: _commandHandler.ProcessEnd(); break;
             default:

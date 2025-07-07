@@ -7,7 +7,6 @@ public enum Commands
     List, // List all due items sorted in ascending order with attribute date
     Complete, // Complete an item
     Reopen, // Reopen a completed item
-    Update, // Edit an item
     Delete, // Delete an item
     End // Shut down App
 }

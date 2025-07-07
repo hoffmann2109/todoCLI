@@ -43,6 +43,7 @@ public class CommandHandler(DatabaseService databaseService)
     
     public void ProcessList()
     {
+        // TODO: Add flags later
         // Filter out completed items for now
         var sortedUncompleted = databaseService.Todos
             .Where(item => !item.IsCompleted)
@@ -52,19 +53,19 @@ public class CommandHandler(DatabaseService databaseService)
             todo.PrintInfo();
     }
     
-    public void ProcessComplete(string[] tokens, InputMessage result)
+    public void ProcessStatusChange(string[] tokens, bool isComplete)
     {
         var description = string.Join(" ", tokens.Skip(1));
         var filter = Builders<BsonDocument>.Filter.Eq("Description", description);
 
-        var update = Builders<BsonDocument>.Update.Set("IsCompleted", true);
+        var update = Builders<BsonDocument>.Update.Set("IsCompleted", isComplete);
 
         databaseService.UpdateItem(filter, update);
         
         var todo = databaseService.Todos.FirstOrDefault(t => t.Description == description);
         if (todo != null)
         {
-            todo.IsCompleted = true;
+            todo.IsCompleted = isComplete;
         }
             
     }
@@ -74,16 +75,6 @@ public class CommandHandler(DatabaseService databaseService)
         var descTokens = tokens.Skip(2).Take(tokens.Length - 3);
         var description = string.Join(" ", descTokens);
         return description;
-    }
-    
-    public void ProcessReopen()
-    {
-
-    }
-    
-    public void ProcessUpdate()
-    {
-
     }
     
     public void ProcessDelete()

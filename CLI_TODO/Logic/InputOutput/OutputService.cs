@@ -16,7 +16,6 @@ public class OutputService
         Console.WriteLine("List ... List all todo items");
         Console.WriteLine("Complete ... Mark todo item as complete");
         Console.WriteLine("Reopen ... Reopen todo item");
-        Console.WriteLine("Update ... Update a todo item");
         Console.WriteLine("Delete ... Delete a todo item");
         Console.WriteLine("End ... End app");
         Console.WriteLine("----------------------------------------");
