@@ -1,13 +1,15 @@
+using CLI_TODO.Data.Items;
+
 namespace CLI_TODO.Data;
 
 public static class TodoItemFactory
 {
-    public static TodoItem Create(
+    public static ITodoItem Create(
         TodoType type,
-        string description,
+        string? description,
         DateTime dueDate)
     {
-        TodoItem item = type switch
+        ITodoItem item = type switch
         {
             TodoType.Personal   => new PersonalItem(),
             TodoType.University => new UniversityItem(),

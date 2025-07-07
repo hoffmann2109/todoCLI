@@ -1,5 +1,5 @@
-using System.Collections;
 using CLI_TODO.Data;
+using CLI_TODO.Data.Items;
 using DotNetEnv;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -8,8 +8,8 @@ namespace CLI_TODO.Database;
 
 public class DatabaseService
 {
-    private static readonly List<TodoItem> _todos = new();
-    private IMongoCollection<BsonDocument> _todosCollection;
+    private static readonly List<ITodoItem> _todos = [];
+    private IMongoCollection<BsonDocument> _todosCollection = null!;
 
     public void InitializeDatabase()
     {
@@ -20,14 +20,8 @@ public class DatabaseService
         const string envPath = "/home/thomas/todoCLI/CLI_TODO/.env";
         Env.Load(envPath);
         
-        var conn = Environment.GetEnvironmentVariable("MONGO_CONN")
+        var conn = Environment.GetEnvironmentVariable("MONGO_CONN") 
                    ?? throw new InvalidOperationException("Set MONGO_CONN in .env");
-
-        if (conn == null)
-        {
-            Console.WriteLine("You need to set MONGO_CONN in .env");
-            Environment.Exit(0);
-        }
         
         try
         {
@@ -82,7 +76,7 @@ public class DatabaseService
         }
     }
     
-    public void AddItems(TodoItem todoItem)
+    public void AddItems(ITodoItem todoItem)
     {
         _todos.Add(todoItem);
         
@@ -99,14 +93,13 @@ public class DatabaseService
         Console.WriteLine(doc);
     }
     
-    public TodoItem GetItemById()
+    public ITodoItem GetItemById()
     {
         
         // TODO: Is it in the database?
         return null;
     }
-    
-    public List<TodoItem> Todos
+    public List<ITodoItem> Todos
     {
         get { return _todos; }
     }

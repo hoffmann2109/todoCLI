@@ -1,9 +1,9 @@
-namespace CLI_TODO.Data;
+namespace CLI_TODO.Data.Items;
 
-public interface TodoItem
+public interface ITodoItem
 {
     TodoType TodoType { get; }
-    string Description { get; set; }
+    string? Description { get; set; }
     DateTime DueDate { get; set; }
     bool IsCompleted { get; set; }
     

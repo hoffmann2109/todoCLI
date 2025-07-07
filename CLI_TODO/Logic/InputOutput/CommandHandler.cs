@@ -4,16 +4,10 @@ using CLI_TODO.Database;
 
 namespace CLI_TODO.Logic.InputOutput;
 
-public class CommandHandler
+public class CommandHandler(DatabaseService databaseService)
 {
-    private readonly DatabaseService _databaseService;
     private readonly OutputService _outputService = new ();
-    
-    public CommandHandler(DatabaseService databaseService)
-    {
-        _databaseService = databaseService;
-    }
-    
+
     public void ProcessHelp()
     {
         _outputService.PrintCommands();
@@ -43,12 +37,12 @@ public class CommandHandler
         
         Console.WriteLine("Added item: ");
         result.TodoItem.PrintInfo();
-        _databaseService.AddItems(result.TodoItem);
+        databaseService.AddItems(result.TodoItem);
     }
     
     public void ProcessList()
     {
-        var list = _databaseService.Todos;
+        var list = databaseService.Todos;
         for (int i = 0; i < list.Count; i++)
         {
             list[i].PrintInfo();

@@ -1,9 +1,9 @@
-namespace CLI_TODO.Data;
+namespace CLI_TODO.Data.Items;
 
-public class ExamItem : TodoItem
+public class ExamItem : ITodoItem
 {
     public TodoType TodoType => TodoType.Exam;
-    public string Description { get; set; }
+    public string? Description { get; set; }
     public DateTime DueDate { get; set; }
     public bool IsCompleted { get; set; }
 }

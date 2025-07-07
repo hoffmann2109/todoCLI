@@ -1,4 +1,3 @@
-using System.Globalization;
 using CLI_TODO.Data;
 
 namespace CLI_TODO.Logic.InputOutput;
@@ -16,7 +15,7 @@ public static class InputParser
         
         var tokens = input
             .Trim()
-            .Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+            .Split((char[])null!, StringSplitOptions.RemoveEmptyEntries);
 
         if (!Enum.TryParse<Commands>(tokens[0], ignoreCase: true, out var command))
         {
