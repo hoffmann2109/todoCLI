@@ -13,12 +13,7 @@ public class DatabaseService
 
     public void InitializeDatabase()
     {
-        // PC:
-        // const string envPath = "/home/thomas/RiderProjects/CLI_TODO/CLI_TODO/.env";
-        
-        // Laptop:
-        const string envPath = "/home/thomas/todoCLI/CLI_TODO/.env";
-        Env.Load(envPath);
+        Env.TraversePath().Load();
         
         var conn = Environment.GetEnvironmentVariable("MONGO_CONN") 
                    ?? throw new InvalidOperationException("Set MONGO_CONN in .env");
@@ -28,14 +23,12 @@ public class DatabaseService
             var client = new MongoClient(conn);
             var database = client.GetDatabase("TodoDb");
             _todosCollection = database.GetCollection<BsonDocument>("todos");
-
-            // Ping the server to verify connectivity
+            
             var ping = new BsonDocument("ping", 1);
             database.RunCommand<BsonDocument>(ping);
 
             Console.WriteLine("✅ Successfully connected to MongoDB.");
             
-            // Serialize all objects into the list:
             RestoreDatabase();
         }
         catch (Exception ex)
@@ -54,20 +47,17 @@ public class DatabaseService
             var desc        = doc.GetValue("Description", "").AsString;
             var isCompleted = doc.GetValue("IsCompleted", false).AsBoolean;
             var typeString  = doc.GetValue("TodoType",    "").AsString;
-
-            // Safe DateTime extraction:
+            
             DateTime dueDate;
             var dueVal = doc.GetValue("DueDate", BsonNull.Value);
             if (dueVal is BsonDateTime bsonDt)
                 dueDate = bsonDt.ToUniversalTime();
             else
                 dueDate = DateTime.MinValue;   // or whatever default you prefer
-
-            // Parse enum
+            
             if (!Enum.TryParse<TodoType>(typeString, out var todoType))
                 todoType = TodoType.Personal;
-
-            // Factory + restore
+            
             var item = TodoItemFactory.Create(todoType, desc, dueDate);
             item.IsCompleted = isCompleted;
 
