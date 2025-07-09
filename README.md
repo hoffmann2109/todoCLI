@@ -87,5 +87,3 @@ todo # launches the app
 * **MongoDB access**: the app reads `MONGO_CONN` at runtime, so you **must** have network access and valid credentials for the database you specify.
 * If you don’t control that MongoDB instance, the app will fail to connect—so out of the box it will only work for whoever owns the database.
 * To use your **own** MongoDB, simply point `MONGO_CONN` at your instance (e.g. a local or cloud-hosted database).
-
-```
