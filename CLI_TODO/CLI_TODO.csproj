@@ -11,5 +11,11 @@
       <PackageReference Include="DotNetEnv" Version="3.1.1" />
       <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
     </ItemGroup>
+    <!-- copy .env to both build output and publish folder -->
+    <ItemGroup>
+        <Content Include=".env"
+                 CopyToOutputDirectory="Always"
+                 CopyToPublishDirectory="Always" />
+    </ItemGroup>
 
 </Project>
