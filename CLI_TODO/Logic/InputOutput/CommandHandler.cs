@@ -41,14 +41,33 @@ public class CommandHandler(DatabaseService databaseService)
         databaseService.AddItems(result.TodoItem);
     }
     
-    public void ProcessList()
+    public void ProcessList(string[] tokens)
     {
-        // TODO: Add flags later
-        // Filter out completed items for now
+        if (tokens.Length > 1 && !string.IsNullOrWhiteSpace(tokens[1]))
+        {
+            var flag = tokens[1].Trim();
+            
+            switch (flag.ToLowerInvariant())
+            {
+                case "--all": // --all: show completed + uncompleted
+                    var allTodos = databaseService.Todos
+                        .OrderBy(item => item.DueDate);
+                    foreach (var todo in allTodos)
+                        todo.PrintInfo();
+                    return;
+
+                // TODO: add more flags
+                default:
+                    Console.WriteLine($"Unknown flag: {flag}");
+                    return;
+            }
+        }
+
+        // No flag: filter out completed items
         var sortedUncompleted = databaseService.Todos
             .Where(item => !item.IsCompleted)
             .OrderBy(item => item.DueDate);
-        
+
         foreach (var todo in sortedUncompleted)
             todo.PrintInfo();
     }

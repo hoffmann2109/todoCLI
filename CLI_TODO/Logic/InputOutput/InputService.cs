@@ -4,17 +4,10 @@ using Sprache;
 
 namespace CLI_TODO.Logic.InputOutput;
 
-public class InputService
+public class InputService(DatabaseService databaseService)
 {
-    private readonly DatabaseService _databaseService;
-    private readonly CommandHandler _commandHandler;
+    private readonly CommandHandler _commandHandler = new(databaseService);
 
-    public InputService(DatabaseService databaseService)
-    {
-        _databaseService = databaseService;
-        _commandHandler = new CommandHandler(_databaseService);
-    }
-    
     public void GetUserInput()
     {
         Console.Write("Enter a command or type 'help' > ");
@@ -36,7 +29,7 @@ public class InputService
         {
             case Commands.Help: _commandHandler.ProcessHelp(); break;
             case Commands.Add: _commandHandler.ProcessAdd(tokens, result); break;
-            case Commands.List: _commandHandler.ProcessList(); break;
+            case Commands.List: _commandHandler.ProcessList(tokens); break;
             case Commands.Complete: _commandHandler.ProcessStatusChange(tokens, true); break;
             case Commands.Reopen: _commandHandler.ProcessStatusChange(tokens, false); break;
             case Commands.Delete: _commandHandler.ProcessDelete(tokens); break;
